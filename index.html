@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>天体干预局 | Celestial Intervention Agency</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/png" href="assets/favicon.png">
+</head>
+<body>
+
+<!-- 背景+扫描线 -->
+<div class="background-layer">
+    <div class="nebula">
+        <div class="nebula-blob nebula-blue"></div>
+        <div class="nebula-blob nebula-purple"></div>
+        <div class="nebula-blob nebula-pink"></div>
+    </div>
+    <div class="stars"></div>
+    <div class="bg-image"></div>
+    <div class="scanlines"></div>
+    <div class="scanline-sweep scanline-sweep-blue"></div>
+    <div class="scanline-sweep scanline-sweep-purple"></div>
+</div>
+
+<!-- 粒子画布 -->
+<canvas id="particle-canvas"></canvas>
+
+<!-- 顶部导航 -->
+<nav class="top-nav">
+    <div class="nav-inner">
+        <div class="nav-links">
+            <a href="#home" class="nav-link">
+                <span class="nav-icon">◆</span>
+                <span class="nav-text">首页</span>
+            </a>
+            <a href="#about" class="nav-link">
+                <span class="nav-icon">◆</span>
+                <span class="nav-text">关于</span>
+            </a>
+            <a href="#members" class="nav-link">
+                <span class="nav-icon">◆</span>
+                <span class="nav-text">成员</span>
+            </a>
+            <a href="#works" class="nav-link">
+                <span class="nav-icon">◆</span>
+                <span class="nav-text">作品</span>
+            </a>
+            <a href="https://discord.gg/2pHFQwQ9Bm" target="_blank" rel="noopener" class="nav-link">
+                <span class="nav-icon">◆</span>
+                <span class="nav-text">Discord</span>
+            </a>
+            <a href="https://smallmoss233.github.io" class="nav-link" target="_blank">
+                <span class="nav-icon">↗</span>
+                <span class="nav-text">组长的个人站：P</span>
+            </a>
+        </div>
+    </div>
+</nav>
+
+<!-- 左侧内容导航 -->
+<nav class="side-nav">
+    <a href="#home" class="side-link" data-target="home">
+        <span class="side-dot"></span>
+        <span class="side-label">首页</span>
+    </a>
+    <a href="#about" class="side-link" data-target="about">
+        <span class="side-dot"></span>
+        <span class="side-label">关于</span>
+    </a>
+    <a href="#members" class="side-link" data-target="members">
+        <span class="side-dot"></span>
+        <span class="side-label">成员</span>
+    </a>
+    <a href="#works" class="side-link" data-target="works">
+        <span class="side-dot"></span>
+        <span class="side-label">作品</span>
+    </a>
+    <a href="#join" class="side-link" data-target="join">
+        <span class="side-dot"></span>
+        <span class="side-label">加入</span>
+    </a>
+</nav>
+
+<main class="content">
+
+    <!-- Hero -->
+    <section class="hero" id="home">
+        <div class="title-stack fade-in-up">
+
+            <div class="vertical-cia">
+                <span>C</span>
+                <span>I</span>
+                <span>A</span>
+            </div>
+
+            <p class="hero-greeting">C E L E S T I A L</p>
+
+            <!-- ★ 组织名（SVG 渐变标题，三段） -->
+            <div class="pixel-title-wrap">
+                <svg class="pixel-title" viewBox="0 0 1100 460"
+                     xmlns="http://www.w3.org/2000/svg"
+                     preserveAspectRatio="xMidYMid meet"
+                     role="img" aria-label="Celestial Intervention Agency">
+                    <defs>
+                        <linearGradient id="titleGradient"
+                                        gradientUnits="userSpaceOnUse"
+                                        x1="0" y1="0" x2="2200" y2="0">
+                            <stop offset="0%"   stop-color="#58a6ff"/>
+                            <stop offset="25%"  stop-color="#a855f7"/>
+                            <stop offset="50%"  stop-color="#58a6ff"/>
+                            <stop offset="75%"  stop-color="#a855f7"/>
+                            <stop offset="100%" stop-color="#58a6ff"/>
+                            <animateTransform attributeName="gradientTransform"
+                                              type="translate"
+                                              from="-1100 0" to="0 0"
+                                              dur="6s" repeatCount="indefinite"/>
+                        </linearGradient>
+                        <filter id="titleGlow" x="-50%" y="-50%" width="200%" height="200%">
+                            <feGaussianBlur stdDeviation="3" result="blur"/>
+                            <feMerge>
+                                <feMergeNode in="blur"/>
+                                <feMergeNode in="SourceGraphic"/>
+                            </feMerge>
+                        </filter>
+                    </defs>
+
+                    <!-- 第 1 行：CELESTIAL ★ x y 改回 550 130 -->
+                    <text x="550" y="130"
+                          text-anchor="middle"
+                          class="pixel-title-text"
+                          font-size="130"
+                          letter-spacing="12"
+                          fill="url(#titleGradient)"
+                          filter="url(#titleGlow)">CELESTIAL</text>
+
+                    <!-- 第 2 行：INTERVENTION -->
+                    <text x="550" y="260"
+                          text-anchor="middle"
+                          class="pixel-title-text"
+                          font-size="130"
+                          letter-spacing="12"
+                          fill="url(#titleGradient)"
+                          filter="url(#titleGlow)">INTERVENTION</text>
+
+                    <!-- 第 3 行：AGENCY -->
+                    <text x="550" y="390"
+                          text-anchor="middle"
+                          class="pixel-title-text"
+                          font-size="130"
+                          letter-spacing="12"
+                          fill="url(#titleGradient)"
+                          filter="url(#titleGlow)">AGENCY</text>
+                </svg>
+            </div>
+
+            <!-- Gallifreyan -->
+            <div class="gallifreyan-line">
+                <span class="g-name">CELESTIAL</span>
+                <span class="g-agency">AGENCY</span>
+            </div>
+        </div>
+
+        <p class="subtitle fade-in-up">天体干预局 · 《神秘博士》为主题的 Minecraft 开发团队</p>
+
+        <div class="hero-tags fade-in-up">
+            <span class="hero-tag" data-tooltip="模组开发">Fabric Mod</span>
+            <span class="hero-tag" data-tooltip="整合包制作">Modpack</span>
+            <span class="hero-tag" data-tooltip="汉化与本地化">Localization</span>
+            <span class="hero-tag" data-tooltip="世界观与设定">Worldbuilding</span>
+            <span class="hero-tag" data-tooltip="美术与模型">Art & Model</span>
+        </div>
+    </section>
+
+    <!-- 关于 -->
+    <section class="section reveal-on-scroll" id="about">
+        <h2>关于我们</h2>
+        <p class="about-intro">
+            天体干预局（Celestial Intervention Agency）是一个极其开放的《神秘博士》× Minecraft 社区。当然不只是 Doctor Who 和 MC——你也可以发送这些主题之外的内容，我们不限制。
+        </p>
+        <p class="about-intro">
+            群内的内容包括但不限于：游戏、猎奇、OC 设定、同人创作……其内鱼龙混杂，啥物种都有，还望来玩的小伙伴们玩得开心。
+        </p>
+
+        <!-- 组织信息卡片 -->
+        <div class="about-grid">
+            <div class="about-card" data-tooltip="2024年9月30日成立~" title="2024年9月30日成立">
+                <div class="about-label">成立</div>
+                <div class="about-value">2024 / 09 / 30</div>
+            </div>
+            <div class="about-card" data-tooltip="拥有贡献的成员" title="拥有贡献的成员">
+                <div class="about-label">拥有贡献的成员</div>
+                <div class="about-value">11 人</div>
+            </div>
+            <div class="about-card" data-tooltip="只有个DOCTOR M ：P" title="只有个DOCTOR M ：P">
+                <div class="about-label">作品</div>
+                <div class="about-value">1 个</div>
+            </div>
+        </div>
+
+        <!-- 加入条件 -->
+        <div class="name-origin">
+            <div class="name-origin-quote">
+                <span class="quote-mark">“</span>
+                知晓 DW，哪怕只是表面也可以。<br>
+                知道冷门设定最好。
+                <span class="quote-mark">”</span>
+            </div>
+            <div class="name-origin-source">
+                — 加入条件
+            </div>
+        </div>
+    </section>
+
+    <!-- 成员 -->
+    <section class="section reveal-on-scroll" id="members">
+        <h2>成员</h2>
+        <p class="section-subtitle">天体干预局的每一位有贡献成员。</p>
+
+        <!-- ========== 核心开发者 ========== -->
+        <div class="member-group">
+            <h3 class="member-group-title">核心开发者</h3>
+            <div class="member-grid">
+
+                <!-- Small Moss -->
+                <a href="https://github.com/smallmoss233"
+                   class="member-card"
+                   data-modrinth="SmallMoss"
+                   target="_blank" rel="noopener">
+                    <div class="member-avatar">
+                        <span class="member-initial">S</span>
+                    </div>
+                    <div class="member-name">Small Moss</div>
+                    <div class="member-role">暂无</div>
+                    <div class="member-bio">组长 · 全栈开发</div>
+                </a>
+
+                <!-- TC-020 -->
+                <div class="member-card" data-modrinth="TC020">
+                    <div class="member-avatar">
+                        <span class="member-initial">T</span>
+                    </div>
+                    <div class="member-name">TC-020</div>
+                    <div class="member-role">暂无</div>
+                    <div class="member-bio">二把手 · 内饰作者</div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- ========== 贡献者 ========== -->
+        <div class="member-group">
+            <h3 class="member-group-title">贡献者</h3>
+            <div class="member-grid">
+
+                <!-- 名游茶 -->
+                <div class="member-card" data-modrinth="MingYouCha-0527">
+                    <div class="member-avatar">
+                        <span class="member-initial">名</span>
+                    </div>
+                    <div class="member-name">名游茶</div>
+                    <div class="member-role">暂无</div>
+                    <div class="member-bio">贡献者 · 内饰作者</div>
+                </div>
+
+                <!-- Pika_YOHO -->
+                <div class="member-card" data-modrinth="Pika_YOHO">
+                    <div class="member-avatar">
+                        <span class="member-initial">P</span>
+                    </div>
+                    <div class="member-name">Pika_YOHO</div>
+                    <div class="member-role">暂无</div>
+                    <div class="member-bio">贡献者 · 内饰作者</div>
+                </div>
+
+                <!-- Kilin_Mus -->
+                <div class="member-card" data-modrinth="Kilin_Mus">
+                    <div class="member-avatar">
+                        <span class="member-initial">K</span>
+                    </div>
+                    <div class="member-name">Kilin_Mus</div>
+                    <div class="member-role">暂无</div>
+                    <div class="member-bio">美术 · 内饰作者</div>
+                </div>
+
+                <!-- Sigeerte -->
+                <div class="member-card" data-modrinth="Sigeerte">
+                    <div class="member-avatar">
+                        <span class="member-initial">S</span>
+                    </div>
+                    <div class="member-name">Sigeerte</div>
+                    <div class="member-role">暂无</div>
+                    <div class="member-bio">贡献者 · 内饰作者</div>
+                </div>
+
+                <!-- asdjdfk -->
+                <div class="member-card" data-modrinth="asdjdfk">
+                    <div class="member-avatar">
+                        <span class="member-initial">A</span>
+                    </div>
+                    <div class="member-name">asdjdfk</div>
+                    <div class="member-role">暂无</div>
+                    <div class="member-bio">贡献者 · 灵感贡献者</div>
+                </div>
+
+                <!-- Tsinafs-Bcim -->
+                <div class="member-card" data-modrinth="Tsinafs-Bcim">
+                    <div class="member-avatar">
+                        <span class="member-initial">T</span>
+                    </div>
+                    <div class="member-name">Tsinafs-Bcim</div>
+                    <div class="member-role">暂无</div>
+                    <div class="member-bio">贡献者 · 灵感贡献者</div>
+                </div>
+
+                <!-- NX-Seeker -->
+                <div class="member-card" data-modrinth="NX-Seeker">
+                    <div class="member-avatar">
+                        <span class="member-initial">N</span>
+                    </div>
+                    <div class="member-name">NX-Seeker</div>
+                    <div class="member-role">暂无</div>
+                    <div class="member-bio">贡献者 · 音速起子批发商</div>
+                </div>
+
+                <!-- Joggest -->
+                <div class="member-card" data-modrinth="Joggest">
+                    <div class="member-avatar">
+                        <span class="member-initial">J</span>
+                    </div>
+                    <div class="member-name">Joggest</div>
+                    <div class="member-role">暂无</div>
+                    <div class="member-bio">红石火把起子作者</div>
+                </div>
+
+                <!-- TX -->
+                <div class="member-card" data-modrinth="TX">
+                    <div class="member-avatar">
+                        <span class="member-initial">T</span>
+                    </div>
+                    <div class="member-name">T天玄X</div>
+                    <div class="member-role">暂无</div>
+                    <div class="member-bio">灵感贡献者</div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- ========== 特别 ========== -->
+        <div class="member-group">
+            <h3 class="member-group-title">特别</h3>
+            <div class="member-grid">
+
+                <!-- Stars_Omega -->
+                <div class="member-card" data-modrinth="Stars_Omega">
+                    <div class="member-avatar">
+                        <span class="member-initial">S</span>
+                    </div>
+                    <div class="member-name">Stars_Omega</div>
+                    <div class="member-role">暂无</div>
+                    <div class="member-bio">吉祥物</div>
+                </div>
+
+            </div>
+        </div>
+
+    </section>
+
+    <!-- 作品 -->
+    <section class="section reveal-on-scroll" id="works">
+        <h2>作品</h2>
+        <p class="section-subtitle">天体干预局免费发布的作品。如遇付费二次分发，请联系我们。</p>
+
+        <div class="works-list">
+            <!-- DOCTOR M -->
+            <a href="https://modrinth.com/mod/doctorm" class="work-card" target="_blank" rel="noopener">
+                <div class="work-icon">
+                    <img src="assets/icons/doctor_m.png" alt="DOCTOR M">
+                </div>
+                <div class="work-info">
+                    <h3>DOCTOR M</h3>
+                    <p>AIT 扩展模组，让 AIT 变得更好更棒！</p>
+                </div>
+                <div class="work-stats">
+                    <span class="stat-downloads" data-modrinth-project="doctorm">--</span>
+                    <span class="stat-label">下载</span>
+                </div>
+                <div class="work-arrow">↗</div>
+            </a>
+        </div>
+    </section>
+
+    <!-- 加入我们 -->
+    <section class="section reveal-on-scroll" id="join">
+        <h2>加入我们</h2>
+        <p class="about-intro">
+            如果你热爱《神秘博士》，并且想为 Minecraft 创作做点什么——无论是模组开发、美术、汉化、还是世界观设定——欢迎加入天体干预局。
+        </p>
+
+        <div class="join-links">
+            <a href="https://github.com/smallmoss233" class="join-card" target="_blank" rel="noopener">
+                <div class="join-icon">⌘</div>
+                <div class="join-title">GitHub</div>
+                <div class="join-desc">查看我们的代码</div>
+            </a>
+
+            <a href="https://space.bilibili.com/2100392650" class="join-card" target="_blank" rel="noopener">
+                <div class="join-icon">▶</div>
+                <div class="join-title">B站</div>
+                <div class="join-desc">关注我们的动态</div>
+            </a>
+
+            <!-- QQ 群 -->
+            <a href="https://qm.qq.com/q/D7UNoQecVM" class="join-card" target="_blank" rel="noopener">
+                <div class="join-icon">◈</div>
+                <div class="join-title">QQ 群</div>
+                <div class="join-desc">群号：654700630</div>
+            </a>
+
+            <!-- ★ Discord（动态显示在线人数） -->
+            <a href="https://discord.gg/2pHFQwQ9Bm" class="join-card" target="_blank" rel="noopener">
+                <div class="join-icon">◆</div>
+                <div class="join-title">Discord</div>
+                <div class="join-desc" id="discord-status">加载中…</div>
+            </a>
+
+        </div>
+    </section>
+
+    <footer class="reveal-on-scroll">
+        <div class="gallifreyan-line small">CELESTIAL INTERVENTION AGENCY</div>
+        <p>© 2026 天体干预局 · Celestial Intervention Agency</p>
+    </footer>
+</main>
+
+<script src="script.js"></script>
+</body>
+</html>
