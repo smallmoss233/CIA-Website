@@ -54,7 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const starsContainer = document.querySelector('.stars');
     if (starsContainer) {
         const fragment = document.createDocumentFragment();
-        for (let i = 0; i < 120; i++) {
+        for (let i = 0; i < 90; i++) {
             const star = document.createElement('div');
             star.className = 'star';
             const size = Math.random() * 2 + 0.5;
@@ -69,7 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
         starsContainer.appendChild(fragment);
     }
 
-    // ---------- 点击粒子效果 ----------
+    // ---------- 点击粒子效果（仅交互触发，不常驻） ----------
     initParticles();
 
     // ---------- 侧边导航高亮 ----------
@@ -78,20 +78,14 @@ document.addEventListener('DOMContentLoaded', () => {
     // ---------- Modrinth 下载量 ----------
     fetchModrinthDownloads();
 
-    // ---------- 最近提交 ----------
-    fetchRecentCommits();
-
-    // ---------- 成员 Modrinth 头像 ----------
-    fetchMemberProfiles();
-
     // ---------- Discord 在线人数 ----------
     fetchDiscordStatus();
 
-    // ---------- Discord 成员头像 ----------
-    fetchDiscordMembers();
+    // ---------- 成员 Modrinth 头像 ----------
+    fetchMemberProfiles();
 });
 
-// ==================== 粒子效果 ====================
+// ==================== 粒子效果（点击触发，播完自动停止） ====================
 function initParticles() {
     const canvas = document.getElementById('particle-canvas');
     if (!canvas) return;
@@ -99,6 +93,7 @@ function initParticles() {
     const ctx = canvas.getContext('2d');
     let particles = [];
     let width, height;
+    let rafId = null;
 
     function resize() {
         width = canvas.width = window.innerWidth;
@@ -120,29 +115,24 @@ function initParticles() {
                 size: Math.random() * 3 + 1,
                 color: colors[Math.floor(Math.random() * colors.length)],
                 life: 1,
-                decay: 0.012 + Math.random() * 0.02
+                decay: 0.015 + Math.random() * 0.02
             });
+        }
+        if (!rafId) {
+            animate();
         }
     }
 
     window.addEventListener('pointerdown', (e) => {
         const target = e.target;
         if (target.closest('a') || target.closest('button')) return;
-        spawnParticles(e.clientX, e.clientY, 25);
-    });
-
-    let lastSpawn = 0;
-    window.addEventListener('pointermove', (e) => {
-        const now = performance.now();
-        if (now - lastSpawn < 60) return;
-        lastSpawn = now;
-        if (Math.abs(e.movementX) + Math.abs(e.movementY) > 15) {
-            spawnParticles(e.clientX, e.clientY, 2);
-        }
-    });
+        spawnParticles(e.clientX, e.clientY, 18);
+    }, { passive: true });
 
     function animate() {
         ctx.clearRect(0, 0, width, height);
+
+        let alive = 0;
         for (let i = particles.length - 1; i >= 0; i--) {
             const p = particles[i];
             p.x += p.vx;
@@ -157,20 +147,25 @@ function initParticles() {
                 continue;
             }
 
+            alive++;
             ctx.save();
             ctx.globalAlpha = p.life;
             ctx.globalCompositeOperation = 'lighter';
             ctx.fillStyle = p.color;
-            ctx.shadowBlur = 12;
+            ctx.shadowBlur = 10;
             ctx.shadowColor = p.color;
             ctx.beginPath();
             ctx.arc(p.x, p.y, p.size * p.life, 0, Math.PI * 2);
             ctx.fill();
             ctx.restore();
         }
-        requestAnimationFrame(animate);
+
+        if (alive > 0) {
+            rafId = requestAnimationFrame(animate);
+        } else {
+            rafId = null;
+        }
     }
-    animate();
 }
 
 // ==================== 侧边导航高亮 ====================
@@ -220,93 +215,6 @@ async function fetchModrinthDownloads() {
             el.textContent = 'N/A';
         }
     }
-}
-
-// ==================== 最近提交 ====================
-const COMMITS_CACHE_KEY = 'doctor_m_commits_cache';
-const COMMITS_CACHE_TTL = 5 * 60 * 1000;
-
-async function fetchRecentCommits() {
-    const list = document.getElementById('commit-list');
-    if (!list) return;
-
-    const username = 'smallmoss233';
-    const maxCommits = 10;
-
-    // 缓存检查
-    try {
-        const cached = JSON.parse(localStorage.getItem(COMMITS_CACHE_KEY) || 'null');
-        if (cached && (Date.now() - cached.time < COMMITS_CACHE_TTL)) {
-            renderCommits(list, cached.commits);
-            return;
-        }
-    } catch (e) {}
-
-    try {
-        const repos = await fetchWithCache(
-            `https://api.github.com/users/${username}/repos?sort=updated&per_page=15`,
-            'github_repos_cache',
-            5 * 60 * 1000,
-            { headers: { 'Accept': 'application/vnd.github+json' } }
-        );
-
-        const ownRepos = repos.filter(r => !r.fork);
-        const allCommits = [];
-
-        const promises = ownRepos.slice(0, 8).map(async repo => {
-            try {
-                const res = await fetch(
-                    `https://api.github.com/repos/${username}/${repo.name}/commits?author=${username}&per_page=10`,
-                    { headers: { 'Accept': 'application/vnd.github+json' } }
-                );
-                if (!res.ok) return [];
-                const commits = await res.json();
-                return commits.map(c => ({
-                    message: (c.commit.message || '').split('\n')[0],
-                    sha: c.sha.substring(0, 7),
-                    repo: repo.name,
-                    url: c.html_url,
-                    date: c.commit.author?.date || ''
-                }));
-            } catch (e) {
-                return [];
-            }
-        });
-
-        const results = await Promise.all(promises);
-        results.forEach(arr => allCommits.push(...arr));
-
-        allCommits.sort((a, b) => new Date(b.date) - new Date(a.date));
-        const top = allCommits.slice(0, maxCommits);
-
-        if (top.length === 0) {
-            list.innerHTML = '<div class="commit-empty">最近没有公开提交</div>';
-            return;
-        }
-
-        renderCommits(list, top);
-        try {
-            localStorage.setItem(COMMITS_CACHE_KEY, JSON.stringify({
-                time: Date.now(),
-                commits: top
-            }));
-        } catch (e) {}
-
-    } catch (err) {
-        console.error('获取提交失败:', err);
-        list.innerHTML = '<div class="commit-empty">暂时无法加载提交记录</div>';
-    }
-}
-
-function renderCommits(list, commits) {
-    list.innerHTML = commits.map(c => `
-        <a class="commit-item" href="${c.url}" target="_blank" rel="noopener">
-            <span class="commit-icon">◉</span>
-            <span class="commit-message" title="${escapeHtml(c.message)}">${escapeHtml(c.message)}</span>
-            <span class="commit-repo">${c.repo}</span>
-            <span class="commit-hash">${c.sha}</span>
-        </a>
-    `).join('');
 }
 
 // ==================== Modrinth 成员头像/简介 ====================
@@ -370,7 +278,7 @@ function applyMemberData(card, profile) {
         avatarEl.innerHTML = `<img src="${profile.avatar}" alt="" loading="lazy">`;
     }
 
-    // 简介（填到 .member-role —— 按你的 HTML 结构）
+    // 简介
     if (profile.bio) {
         const roleEl = card.querySelector('.member-role');
         if (roleEl) {
@@ -398,47 +306,5 @@ async function fetchDiscordStatus() {
     } catch (e) {
         console.warn('无法获取 Discord 状态:', e);
         el.textContent = '点击加入';
-    }
-}
-
-// ==================== Discord 成员头像 ====================
-const DISCORD_MEMBER_CACHE_KEY = 'cia_discord_members';
-const DISCORD_MEMBER_CACHE_TTL = 5 * 60 * 1000;
-
-async function fetchDiscordMembers() {
-    const cards = document.querySelectorAll('.member-card[data-discord]');
-    if (cards.length === 0) return;
-
-    let members;
-    try {
-        const data = await fetchWithCache(
-            `https://discord.com/api/guilds/${DISCORD_SERVER_ID}/widget.json`,
-            DISCORD_MEMBER_CACHE_KEY,
-            DISCORD_MEMBER_CACHE_TTL
-        );
-        members = data.members || [];
-    } catch (e) {
-        console.warn('无法获取 Discord 成员数据:', e);
-        return;
-    }
-
-    for (const card of cards) {
-        const targetName = card.getAttribute('data-discord');
-        const found = members.find(m => m.username === targetName);
-        if (!found) continue;
-
-        // 替换头像
-        if (found.avatar_url) {
-            const avatarEl = card.querySelector('.member-avatar');
-            if (avatarEl) {
-                avatarEl.innerHTML = `<img src="${found.avatar_url}" alt="" loading="lazy">`;
-            }
-        }
-
-        // 更新名字（可选）
-        const nameEl = card.querySelector('.member-name');
-        if (nameEl) {
-            nameEl.textContent = found.username;
-        }
     }
 }

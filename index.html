@@ -9,22 +9,18 @@
 </head>
 <body>
 
-<!-- 背景+扫描线 -->
-<div class="background-layer">
+<!-- 背景层：仅保留星云 + 星点（背景图与扫描线已移除） -->
+<div class="background-layer" aria-hidden="true">
     <div class="nebula">
         <div class="nebula-blob nebula-blue"></div>
         <div class="nebula-blob nebula-purple"></div>
         <div class="nebula-blob nebula-pink"></div>
     </div>
     <div class="stars"></div>
-    <div class="bg-image"></div>
-    <div class="scanlines"></div>
-    <div class="scanline-sweep scanline-sweep-blue"></div>
-    <div class="scanline-sweep scanline-sweep-purple"></div>
 </div>
 
-<!-- 粒子画布 -->
-<canvas id="particle-canvas"></canvas>
+<!-- 点击粒子画布（仅在交互时绘制） -->
+<canvas id="particle-canvas" aria-hidden="true"></canvas>
 
 <!-- 顶部导航 -->
 <nav class="top-nav">
@@ -59,7 +55,7 @@
 </nav>
 
 <!-- 左侧内容导航 -->
-<nav class="side-nav">
+<nav class="side-nav" aria-label="主要内容导航">
     <a href="#home" class="side-link" data-target="home">
         <span class="side-dot"></span>
         <span class="side-label">首页</span>
@@ -86,89 +82,25 @@
 
     <!-- Hero -->
     <section class="hero" id="home">
-        <div class="title-stack fade-in-up">
-
-            <div class="vertical-cia">
-                <span>C</span>
-                <span>I</span>
-                <span>A</span>
-            </div>
-
+        <div class="hero-inner">
             <p class="hero-greeting">C E L E S T I A L</p>
 
-            <!-- ★ 组织名（SVG 渐变标题，三段） -->
             <div class="pixel-title-wrap">
-                <svg class="pixel-title" viewBox="0 0 1100 460"
-                     xmlns="http://www.w3.org/2000/svg"
-                     preserveAspectRatio="xMidYMid meet"
-                     role="img" aria-label="Celestial Intervention Agency">
-                    <defs>
-                        <linearGradient id="titleGradient"
-                                        gradientUnits="userSpaceOnUse"
-                                        x1="0" y1="0" x2="2200" y2="0">
-                            <stop offset="0%"   stop-color="#58a6ff"/>
-                            <stop offset="25%"  stop-color="#a855f7"/>
-                            <stop offset="50%"  stop-color="#58a6ff"/>
-                            <stop offset="75%"  stop-color="#a855f7"/>
-                            <stop offset="100%" stop-color="#58a6ff"/>
-                            <animateTransform attributeName="gradientTransform"
-                                              type="translate"
-                                              from="-1100 0" to="0 0"
-                                              dur="6s" repeatCount="indefinite"/>
-                        </linearGradient>
-                        <filter id="titleGlow" x="-50%" y="-50%" width="200%" height="200%">
-                            <feGaussianBlur stdDeviation="3" result="blur"/>
-                            <feMerge>
-                                <feMergeNode in="blur"/>
-                                <feMergeNode in="SourceGraphic"/>
-                            </feMerge>
-                        </filter>
-                    </defs>
-
-                    <!-- 第 1 行：CELESTIAL ★ x y 改回 550 130 -->
-                    <text x="550" y="130"
-                          text-anchor="middle"
-                          class="pixel-title-text"
-                          font-size="130"
-                          letter-spacing="12"
-                          fill="url(#titleGradient)"
-                          filter="url(#titleGlow)">CELESTIAL</text>
-
-                    <!-- 第 2 行：INTERVENTION -->
-                    <text x="550" y="260"
-                          text-anchor="middle"
-                          class="pixel-title-text"
-                          font-size="130"
-                          letter-spacing="12"
-                          fill="url(#titleGradient)"
-                          filter="url(#titleGlow)">INTERVENTION</text>
-
-                    <!-- 第 3 行：AGENCY -->
-                    <text x="550" y="390"
-                          text-anchor="middle"
-                          class="pixel-title-text"
-                          font-size="130"
-                          letter-spacing="12"
-                          fill="url(#titleGradient)"
-                          filter="url(#titleGlow)">AGENCY</text>
-                </svg>
+                <h1 class="hero-title">
+                    天体干预局
+                    <span class="hero-title-en">Celestial Intervention Agency</span>
+                </h1>
             </div>
 
-            <!-- Gallifreyan -->
-            <div class="gallifreyan-line">
-                <span class="g-name">CELESTIAL</span>
-                <span class="g-agency">AGENCY</span>
+            <p class="subtitle">《神秘博士》为主题的 Minecraft 开发团队</p>
+
+            <div class="hero-tags">
+                <span class="hero-tag" data-tooltip="模组开发">Fabric Mod</span>
+                <span class="hero-tag" data-tooltip="整合包制作">Modpack</span>
+                <span class="hero-tag" data-tooltip="汉化与本地化">Localization</span>
+                <span class="hero-tag" data-tooltip="世界观与设定">Worldbuilding</span>
+                <span class="hero-tag" data-tooltip="美术与模型">Art & Model</span>
             </div>
-        </div>
-
-        <p class="subtitle fade-in-up">天体干预局 · 《神秘博士》为主题的 Minecraft 开发团队</p>
-
-        <div class="hero-tags fade-in-up">
-            <span class="hero-tag" data-tooltip="模组开发">Fabric Mod</span>
-            <span class="hero-tag" data-tooltip="整合包制作">Modpack</span>
-            <span class="hero-tag" data-tooltip="汉化与本地化">Localization</span>
-            <span class="hero-tag" data-tooltip="世界观与设定">Worldbuilding</span>
-            <span class="hero-tag" data-tooltip="美术与模型">Art & Model</span>
         </div>
     </section>
 
@@ -235,15 +167,15 @@
                     <div class="member-bio">组长 · 全栈开发</div>
                 </a>
 
-                <!-- TC-020 → GitHub -->
-                <a href="https://github.com/TC-020"
+                <!-- 依卡瓦斯 → GitHub -->
+                <a href="https://github.com/Icarwas"
                    class="member-card"
-                   data-modrinth="TC020"
+                   data-modrinth="Icarwas"
                    target="_blank" rel="noopener">
                     <div class="member-avatar">
                         <span class="member-initial">T</span>
                     </div>
-                    <div class="member-name">TC-020</div>
+                    <div class="member-name">依卡瓦斯</div>
                     <div class="member-role">暂无</div>
                     <div class="member-bio">二把手 · 内饰作者</div>
                 </a>
@@ -408,7 +340,7 @@
             <!-- DOCTOR M -->
             <a href="https://modrinth.com/mod/doctorm" class="work-card" target="_blank" rel="noopener">
                 <div class="work-icon">
-                    <img src="assets/icons/doctor_m.png" alt="DOCTOR M">
+                    <img src="assets/icons/doctor_m.png" alt="DOCTOR M" loading="lazy">
                 </div>
                 <div class="work-info">
                     <h3>DOCTOR M</h3>
@@ -461,7 +393,6 @@
     </section>
 
     <footer class="reveal-on-scroll">
-        <div class="gallifreyan-line small">CELESTIAL INTERVENTION AGENCY</div>
         <p>© 2026 天体干预局 · Celestial Intervention Agency</p>
     </footer>
 </main>
