@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>天体干预局 | Celestial Intervention Agency</title>
+    <title data-i18n="meta.title">天体干预局 | Celestial Intervention Agency</title>
     <link rel="stylesheet" href="style.css">
     <link rel="icon" type="image/png" href="assets/favicon.png">
 </head>
 <body>
 
-<!-- 背景层：仅保留星云 + 星点（背景图与扫描线已移除） -->
+<!-- 背景层：星云 + 星点 -->
 <div class="background-layer" aria-hidden="true">
     <div class="nebula">
         <div class="nebula-blob nebula-blue"></div>
@@ -19,37 +19,44 @@
     <div class="stars"></div>
 </div>
 
-<!-- 点击粒子画布（仅在交互时绘制） -->
+<!-- 点击粒子画布 -->
 <canvas id="particle-canvas" aria-hidden="true"></canvas>
 
 <!-- 顶部导航 -->
 <nav class="top-nav">
     <div class="nav-inner">
+        <div class="nav-brand">
+            <span class="nav-brand-icon">☉</span>
+            <span class="nav-brand-text">CIA</span>
+        </div>
         <div class="nav-links">
             <a href="#home" class="nav-link">
                 <span class="nav-icon">◆</span>
-                <span class="nav-text">首页</span>
+                <span class="nav-text" data-i18n="nav.home">首页</span>
             </a>
             <a href="#about" class="nav-link">
                 <span class="nav-icon">◆</span>
-                <span class="nav-text">关于</span>
+                <span class="nav-text" data-i18n="nav.about">关于</span>
             </a>
             <a href="#members" class="nav-link">
                 <span class="nav-icon">◆</span>
-                <span class="nav-text">成员</span>
+                <span class="nav-text" data-i18n="nav.members">成员</span>
             </a>
             <a href="#works" class="nav-link">
                 <span class="nav-icon">◆</span>
-                <span class="nav-text">作品</span>
+                <span class="nav-text" data-i18n="nav.works">作品</span>
             </a>
             <a href="https://discord.gg/2pHFQwQ9Bm" target="_blank" rel="noopener" class="nav-link">
                 <span class="nav-icon">◆</span>
-                <span class="nav-text">Discord</span>
+                <span class="nav-text" data-i18n="nav.discord">Discord</span>
             </a>
             <a href="https://smallmoss233.github.io" class="nav-link" target="_blank">
                 <span class="nav-icon">↗</span>
-                <span class="nav-text">组长的个人站：P</span>
+                <span class="nav-text" data-i18n="nav.personal">组长的个人站：P</span>
             </a>
+            <button class="lang-switcher" id="lang-switcher" type="button" aria-label="切换语言">
+                <span class="lang-text">EN</span>
+            </button>
         </div>
     </div>
 </nav>
@@ -58,23 +65,23 @@
 <nav class="side-nav" aria-label="主要内容导航">
     <a href="#home" class="side-link" data-target="home">
         <span class="side-dot"></span>
-        <span class="side-label">首页</span>
+        <span class="side-label" data-i18n="nav.home">首页</span>
     </a>
     <a href="#about" class="side-link" data-target="about">
         <span class="side-dot"></span>
-        <span class="side-label">关于</span>
+        <span class="side-label" data-i18n="nav.about">关于</span>
     </a>
     <a href="#members" class="side-link" data-target="members">
         <span class="side-dot"></span>
-        <span class="side-label">成员</span>
+        <span class="side-label" data-i18n="nav.members">成员</span>
     </a>
     <a href="#works" class="side-link" data-target="works">
         <span class="side-dot"></span>
-        <span class="side-label">作品</span>
+        <span class="side-label" data-i18n="nav.works">作品</span>
     </a>
     <a href="#join" class="side-link" data-target="join">
         <span class="side-dot"></span>
-        <span class="side-label">加入</span>
+        <span class="side-label" data-i18n="nav.about">加入</span>
     </a>
 </nav>
 
@@ -82,76 +89,124 @@
 
     <!-- Hero -->
     <section class="hero" id="home">
-        <div class="hero-inner">
-            <p class="hero-greeting">C E L E S T I A L</p>
 
-            <div class="pixel-title-wrap">
-                <h1 class="hero-title">
+        <div class="time-vortex ring-pulse" aria-hidden="true"></div>
+
+        <div class="hero-inner slide-fade-in">
+            <p class="hero-greeting breathe-anim" data-i18n="hero.greeting">C E L E S T I A L</p>
+
+            <div class="pixel-title-wrap float-anim">
+                <h1 class="hero-title" data-i18n="hero.title">
                     天体干预局
-                    <span class="hero-title-en">Celestial Intervention Agency</span>
+                    <span class="hero-title-en" data-i18n="hero.title-en">Celestial Intervention Agency</span>
                 </h1>
             </div>
 
-            <p class="subtitle">《神秘博士》为主题的 Minecraft 开发团队</p>
+            <p class="subtitle" data-i18n="hero.subtitle">《神秘博士》为主题的 Minecraft 开发团队</p>
 
             <div class="hero-tags">
-                <span class="hero-tag" data-tooltip="模组开发">Fabric Mod</span>
-                <span class="hero-tag" data-tooltip="整合包制作">Modpack</span>
-                <span class="hero-tag" data-tooltip="汉化与本地化">Localization</span>
-                <span class="hero-tag" data-tooltip="世界观与设定">Worldbuilding</span>
-                <span class="hero-tag" data-tooltip="美术与模型">Art & Model</span>
+                <span class="hero-tag" data-tooltip="模组开发" data-i18n="hero.tag.fabric" data-i18n-tooltip="hero.tag.fabric-tooltip">Fabric Mod</span>
+                <span class="hero-tag" data-tooltip="整合包制作" data-i18n="hero.tag.modpack" data-i18n-tooltip="hero.tag.modpack-tooltip">Modpack</span>
+                <span class="hero-tag" data-tooltip="汉化与本地化" data-i18n="hero.tag.localization" data-i18n-tooltip="hero.tag.localization-tooltip">Localization</span>
+                <span class="hero-tag" data-tooltip="世界观与设定" data-i18n="hero.tag.worldbuilding" data-i18n-tooltip="hero.tag.worldbuilding-tooltip">Worldbuilding</span>
+                <span class="hero-tag" data-tooltip="美术与模型" data-i18n="hero.tag.art" data-i18n-tooltip="hero.tag.art-tooltip">Art & Model</span>
             </div>
         </div>
     </section>
 
     <!-- 关于 -->
     <section class="section reveal-on-scroll" id="about">
-        <h2>关于我们</h2>
-        <p class="about-intro">
+        <div class="section-header">
+            <h2 data-i18n="about.title">关于我们</h2>
+            <span class="section-divider">⟡</span>
+        </div>
+        <p class="about-intro" data-i18n="about.intro1">
             天体干预局（Celestial Intervention Agency）是一个极其开放的《神秘博士》× Minecraft 社区。当然不只是 Doctor Who 和 MC——你也可以发送这些主题之外的内容，我们不限制。
         </p>
-        <p class="about-intro">
+        <p class="about-intro" data-i18n="about.intro2">
             群内的内容包括但不限于：游戏、猎奇、OC 设定、同人创作……其内鱼龙混杂，啥物种都有，还望来玩的小伙伴们玩得开心。
         </p>
 
         <!-- 组织信息卡片 -->
         <div class="about-grid">
-            <div class="about-card" data-tooltip="2024年9月30日成立~" title="2024年9月30日成立">
-                <div class="about-label">成立</div>
+            <div class="about-card" data-tooltip="2024年9月30日成立~" title="2024年9月30日成立~" data-i18n-tooltip="about.tooltip.founded">
+                <div class="about-label" data-i18n="about.label.founded">成立</div>
                 <div class="about-value">2024 / 09 / 30</div>
             </div>
-            <div class="about-card" data-tooltip="拥有贡献的成员" title="拥有贡献的成员">
-                <div class="about-label">拥有贡献的成员</div>
-                <div class="about-value">11 人</div>
+            <div class="about-card" data-tooltip="拥有贡献的成员" title="拥有贡献的成员" data-i18n-tooltip="about.tooltip.members">
+                <div class="about-label" data-i18n="about.label.members">拥有贡献的成员</div>
+                <div class="about-value" data-i18n="about.value.members">11 人</div>
             </div>
-            <div class="about-card" data-tooltip="只有个DOCTOR M ：P" title="只有个DOCTOR M ：P">
-                <div class="about-label">作品</div>
-                <div class="about-value">1 个</div>
+            <div class="about-card" data-tooltip="只有个DOCTOR M ：P" title="只有个DOCTOR M ：P" data-i18n-tooltip="about.tooltip.works">
+                <div class="about-label" data-i18n="about.label.works">作品</div>
+                <div class="about-value" data-i18n="about.value.works">1 个</div>
             </div>
         </div>
 
         <!-- 加入条件 -->
         <div class="name-origin">
-            <div class="name-origin-quote">
+            <div class="name-origin-quote" data-i18n="about.join.quote">
                 <span class="quote-mark">“</span>
                 知晓 DW，哪怕只是表面也可以。<br>
                 知道冷门设定最好。
                 <span class="quote-mark">”</span>
             </div>
-            <div class="name-origin-source">
+            <div class="name-origin-source" data-i18n="about.join.source">
                 — 加入条件
+            </div>
+        </div>
+
+        <!-- CIA 组织档案 -->
+        <div class="cia-lore reveal-on-scroll">
+            <div class="section-header">
+                <h2 data-i18n="lore.title">组织档案 · 天体干预局</h2>
+                <span class="section-divider">⟡</span>
+            </div>
+            <div class="cia-profile">
+                <div class="cia-profile-row">
+                    <span class="cia-profile-label" data-i18n="lore.label.name">组织名称</span>
+                    <span class="cia-profile-value" data-i18n="lore.value.name">天体干预局 · Celestial Intervention Agency (CIA)</span>
+                </div>
+                <div class="cia-profile-row">
+                    <span class="cia-profile-label" data-i18n="lore.label.type">组织类型</span>
+                    <span class="cia-profile-value" data-i18n="lore.value.type">情报机构</span>
+                </div>
+                <div class="cia-profile-row">
+                    <span class="cia-profile-label" data-i18n="lore.label.founded">创立时间</span>
+                    <span class="cia-profile-value" data-i18n="lore.value.founded">古代伽里弗雷，可追溯至拉斯隆时期，由拉斯隆的近卫队精英成员演变而来</span>
+                </div>
+                <div class="cia-profile-row">
+                    <span class="cia-profile-label" data-i18n="lore.label.headquarters">总部地点</span>
+                    <span class="cia-profile-value" data-i18n="lore.value.headquarters">Gallifrey</span>
+                </div>
+                <div class="cia-profile-row">
+                    <span class="cia-profile-label" data-i18n="lore.label.nature">组织性质</span>
+                    <span class="cia-profile-value" data-i18n="lore.value.nature">表面上是公开记录在案的组织，但行动具有秘密性质；最高议会对外否认其存在</span>
+                </div>
+                <div class="cia-profile-row">
+                    <span class="cia-profile-label" data-i18n="lore.label.mission">核心任务</span>
+                    <span class="cia-profile-value" data-i18n="lore.value.mission">保卫时间领主社会免受威胁；保护时间之网；捍卫时间领主统治宇宙的历史</span>
+                </div>
+                <div class="cia-profile-row cia-profile-motto">
+                    <span class="cia-profile-label" data-i18n="lore.label.motto">宗旨</span>
+                    <span class="cia-profile-value" data-i18n="lore.value.motto">"The story changes, the ending stays the same"</span>
+                    <span class="motto-zh" data-i18n="lore.value.motto-zh">情节改变，结局不变——允许改变历史细节，但确保整体结果恒定</span>
+                </div>
             </div>
         </div>
     </section>
 
     <!-- 成员 -->
     <section class="section reveal-on-scroll" id="members">
-        <h2>成员</h2>
-        <p class="section-subtitle">天体干预局的每一位有贡献成员。</p>
+        <div class="section-header">
+            <h2 data-i18n="members.title">成员</h2>
+            <span class="section-divider">⟡</span>
+        </div>
+        <p class="section-subtitle" data-i18n="members.subtitle">天体干预局的每一位有贡献成员。</p>
 
         <!-- ========== 核心开发者 ========== -->
         <div class="member-group">
-            <h3 class="member-group-title">核心开发者</h3>
+            <h3 class="member-group-title" data-i18n="members.group.core">核心开发者</h3>
             <div class="member-grid">
 
                 <!-- Small Moss → 个人网站 -->
@@ -185,7 +240,7 @@
 
         <!-- ========== 贡献者 ========== -->
         <div class="member-group">
-            <h3 class="member-group-title">贡献者</h3>
+            <h3 class="member-group-title" data-i18n="members.group.contributor">贡献者</h3>
             <div class="member-grid">
 
                 <!-- 名游茶 → Modrinth -->
@@ -310,7 +365,7 @@
 
         <!-- ========== 特别 ========== -->
         <div class="member-group">
-            <h3 class="member-group-title">特别</h3>
+            <h3 class="member-group-title" data-i18n="members.group.special">特别</h3>
             <div class="member-grid">
 
                 <!-- Stars_Omega → Modrinth -->
@@ -333,8 +388,11 @@
 
     <!-- 作品 -->
     <section class="section reveal-on-scroll" id="works">
-        <h2>作品</h2>
-        <p class="section-subtitle">天体干预局免费发布的作品。如遇付费二次分发，请联系我们。</p>
+        <div class="section-header">
+            <h2 data-i18n="works.title">作品</h2>
+            <span class="section-divider">⟡</span>
+        </div>
+        <p class="section-subtitle" data-i18n="works.subtitle">天体干预局免费发布的作品。如遇付费二次分发，请联系我们。</p>
 
         <div class="works-list">
             <!-- DOCTOR M -->
@@ -344,11 +402,11 @@
                 </div>
                 <div class="work-info">
                     <h3>DOCTOR M</h3>
-                    <p>AIT 扩展模组，让 AIT 变得更好更棒！</p>
+                    <p data-i18n="works.doctorm.desc">AIT 扩展模组，让 AIT 变得更好更棒！</p>
                 </div>
                 <div class="work-stats">
                     <span class="stat-downloads" data-modrinth-project="doctorm">--</span>
-                    <span class="stat-label">下载</span>
+                    <span class="stat-label" data-i18n="works.label.downloads">下载</span>
                 </div>
                 <div class="work-arrow">↗</div>
             </a>
@@ -357,43 +415,49 @@
 
     <!-- 加入我们 -->
     <section class="section reveal-on-scroll" id="join">
-        <h2>加入我们</h2>
-        <p class="about-intro">
+        <div class="section-header">
+            <h2 data-i18n="join.title">加入我们</h2>
+            <span class="section-divider">⟡</span>
+        </div>
+        <p class="about-intro" data-i18n="join.intro">
             如果你热爱《神秘博士》，并且想为 Minecraft 创作做点什么——无论是模组开发、美术、汉化、还是世界观设定——欢迎加入天体干预局。
         </p>
 
         <div class="join-links">
             <a href="https://github.com/smallmoss233" class="join-card" target="_blank" rel="noopener">
                 <div class="join-icon">⌘</div>
-                <div class="join-title">GitHub</div>
-                <div class="join-desc">查看我们的代码</div>
+                <div class="join-title" data-i18n="join.github">GitHub</div>
+                <div class="join-desc" data-i18n="join.github-desc">查看我们的代码</div>
             </a>
 
             <a href="https://space.bilibili.com/2100392650" class="join-card" target="_blank" rel="noopener">
                 <div class="join-icon">▶</div>
-                <div class="join-title">B站</div>
-                <div class="join-desc">关注我们的动态</div>
+                <div class="join-title" data-i18n="join.bilibili">B站</div>
+                <div class="join-desc" data-i18n="join.bilibili-desc">关注我们的动态</div>
             </a>
 
             <!-- QQ 群 -->
             <a href="https://qm.qq.com/q/D7UNoQecVM" class="join-card" target="_blank" rel="noopener">
                 <div class="join-icon">◈</div>
-                <div class="join-title">QQ 群</div>
-                <div class="join-desc">群号：654700630</div>
+                <div class="join-title" data-i18n="join.qq">QQ 群</div>
+                <div class="join-desc" data-i18n="join.qq-desc">群号：654700630</div>
             </a>
 
             <!-- ★ Discord（动态显示在线人数） -->
             <a href="https://discord.gg/2pHFQwQ9Bm" class="join-card" target="_blank" rel="noopener">
                 <div class="join-icon">◆</div>
-                <div class="join-title">Discord</div>
-                <div class="join-desc" id="discord-status">加载中…</div>
+                <div class="join-title" data-i18n="join.discord">Discord</div>
+                <div class="join-desc" id="discord-status" data-i18n="join.discord-loading">加载中…</div>
             </a>
 
         </div>
     </section>
 
     <footer class="reveal-on-scroll">
-        <p>© 2026 天体干预局 · Celestial Intervention Agency</p>
+        <div class="gallifreyan-circle" aria-hidden="true">
+            <img src="assets/favicon.png" alt="CIA Logo">
+        </div>
+        <p data-i18n="footer.copyright">© 2026 天体干预局 · Celestial Intervention Agency</p>
     </footer>
 </main>
 
