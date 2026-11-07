@@ -8,6 +8,7 @@ const TRANSLATIONS = {
         'meta.title': '天体干预局 | Celestial Intervention Agency',
         'nav.home': '首页',
         'nav.about': '关于',
+        'nav.join': '加入',
         'nav.members': '成员',
         'nav.works': '作品',
         'nav.discord': 'Discord',
@@ -82,6 +83,7 @@ const TRANSLATIONS = {
         'meta.title': 'Celestial Intervention Agency | 天体干预局',
         'nav.home': 'Home',
         'nav.about': 'About',
+        'nav.join': 'Join',
         'nav.members': 'Members',
         'nav.works': 'Works',
         'nav.discord': 'Discord',
@@ -268,6 +270,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const next = current === 'zh-CN' ? 'en' : 'zh-CN';
             applyLanguage(next);
             updateLangBtn();
+            fetchDiscordStatus(); // applyLanguage 会把状态文字重置为"加载中"，需重新拉取/兜底
         });
     }
 
@@ -529,15 +532,18 @@ async function fetchDiscordStatus() {
     const el = document.getElementById('discord-status');
     if (!el || !DISCORD_SERVER_ID) return;
 
+    const isEn = localStorage.getItem(LANG_KEY) === 'en';
+
     try {
         const data = await fetchWithCache(
             `https://discord.com/api/guilds/${DISCORD_SERVER_ID}/widget.json`,
             DISCORD_CACHE_KEY,
-            DISCORD_CACHE_TTL
+            DISCORD_CACHE_TTL,
+            { signal: AbortSignal.timeout(6000) } // discord.com 在部分网络不可达，超时兜底避免永远卡在"加载中"
         );
-        el.textContent = `${data.presence_count || 0} 人在线`;
+        el.textContent = `${data.presence_count || 0}${isEn ? ' online' : ' 人在线'}`;
     } catch (e) {
         console.warn('无法获取 Discord 状态:', e);
-        el.textContent = '点击加入';
+        el.textContent = isEn ? 'Click to join' : '点击加入';
     }
 }
